@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="CrediPhone: venta de celulares, accesorios y creditos. Encuentranos en todas nuestras redes." />
+  <title>CrediPhone | Links</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- =========================================================
+       PAGINA PRINCIPAL - el JS la llena dinamicamente
+       ========================================================= -->
+  <main class="page" id="main-content" aria-label="Perfil de CrediPhone">
+
+    <div class="profile">
+      <div class="avatar-wrap">
+        <img id="avatar-img" class="avatar" src="profile.jpg" alt="Foto de perfil" width="96" height="96" />
+        <div class="avatar avatar--fallback" id="avatar-fallback" aria-hidden="true">CP</div>
+      </div>
+      <h1 class="brand" id="brand-name">CrediPhone</h1>
+      <p class="tagline" id="brand-tagline">Celulares, accesorios y credito accesible</p>
+    </div>
+
+    <nav class="links" aria-label="Redes sociales y contacto">
+      <ul class="links__list" id="links-list" role="list"></ul>
+    </nav>
+
+    <footer class="footer">
+      <p class="footer__copy" id="footer-brand">CrediPhone</p>
+      <p class="footer__year">&copy; <span id="year"></span></p>
+    </footer>
+
+  </main>
+
+  <!-- =========================================================
+       BOTON FLOTANTE - completamente oculto por defecto.
+       Solo aparece si: 1) la URL contiene ?edit  2) el nombre
+       de la pagina recibe 5 toques rapidos en menos de 2 s.
+       ========================================================= -->
+  <button
+    class="admin-trigger admin-trigger--hidden"
+    id="admin-trigger"
+    aria-label="Abrir panel de administracion"
+    tabindex="-1"
+  >
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+
+  <!-- =========================================================
+       DIALOGO DE CONTRASENA
+       ========================================================= -->
+  <div class="modal-backdrop" id="login-backdrop" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="login-title">
+    <div class="modal">
+      <h2 class="modal__title" id="login-title">Acceso al panel</h2>
+      <p class="modal__desc">Ingresa la contrasena para editar la pagina</p>
+      <form class="modal__form" id="login-form" novalidate>
+        <label class="field-label" for="login-password">Contrasena</label>
+        <div class="field-row">
+          <input
+            class="field-input"
+            type="password"
+            id="login-password"
+            name="password"
+            autocomplete="current-password"
+            placeholder="Escribe tu contrasena"
+            required
+          />
+          <button type="button" class="field-toggle" id="toggle-password" aria-label="Mostrar contrasena">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="currentColor" stroke-width="2"/>
+              <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+            </svg>
+          </button>
+        </div>
+        <p class="field-error" id="login-error" role="alert" aria-live="polite"></p>
+        <div class="modal__actions">
+          <button type="button" class="btn btn--ghost" id="login-cancel">Cancelar</button>
+          <button type="submit" class="btn btn--primary" id="login-submit">Entrar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       PANEL DE ADMINISTRACION
+       ========================================================= -->
+  <div class="panel-backdrop" id="panel-backdrop" aria-hidden="true"></div>
+
+  <aside class="admin-panel" id="admin-panel" aria-hidden="true" aria-label="Panel de administracion">
+
+    <!-- Cabecera del panel -->
+    <div class="panel__header">
+      <h2 class="panel__title">Editar pagina</h2>
+      <button class="panel__close" id="panel-close" aria-label="Cerrar panel">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Contenido desplazable -->
+    <div class="panel__body">
+
+      <!-- SECCION: Perfil -->
+      <section class="panel-section">
+        <button class="section-toggle" aria-expanded="true" aria-controls="sec-profile">
+          <span class="section-toggle__icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2"/>
+              <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </span>
+          Perfil
+          <svg class="section-toggle__chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <div class="section-body" id="sec-profile">
+
+          <!-- Foto de perfil -->
+          <div class="field-group">
+            <label class="field-label">Foto de perfil</label>
+            <div class="avatar-editor">
+              <div class="avatar-preview-wrap">
+                <img id="avatar-preview" class="avatar-preview" src="profile.jpg" alt="Vista previa del avatar" />
+                <div class="avatar-preview avatar-preview--fallback" id="avatar-preview-fallback" aria-hidden="true">CP</div>
+              </div>
+              <div class="avatar-actions">
+                <label class="btn btn--ghost btn--sm" for="avatar-file-input" style="cursor:pointer;">
+                  Subir imagen
+                  <input type="file" id="avatar-file-input" accept="image/*" class="visually-hidden" />
+                </label>
+                <input
+                  class="field-input field-input--sm"
+                  type="url"
+                  id="avatar-url"
+                  placeholder="O pega una URL de imagen"
+                />
+                <button class="btn btn--ghost btn--sm btn--danger" id="avatar-remove">Quitar foto</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Nombre -->
+          <div class="field-group">
+            <label class="field-label" for="edit-brand">Nombre de la pagina</label>
+            <input class="field-input" type="text" id="edit-brand" maxlength="40" placeholder="CrediPhone" />
+          </div>
+
+          <!-- Tagline -->
+          <div class="field-group">
+            <label class="field-label" for="edit-tagline">Descripcion corta</label>
+            <input class="field-input" type="text" id="edit-tagline" maxlength="80" placeholder="Celulares, accesorios y credito accesible" />
+          </div>
+
+        </div>
+      </section>
+
+      <!-- SECCION: Links -->
+      <section class="panel-section">
+        <button class="section-toggle" aria-expanded="true" aria-controls="sec-links">
+          <span class="section-toggle__icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </span>
+          Links
+          <svg class="section-toggle__chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <div class="section-body" id="sec-links">
+          <div id="links-editor"></div>
+          <button class="btn btn--ghost btn--full" id="add-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            Agregar link
+          </button>
+        </div>
+      </section>
+
+      <!-- SECCION: Colores -->
+      <section class="panel-section">
+        <button class="section-toggle" aria-expanded="true" aria-controls="sec-colors">
+          <span class="section-toggle__icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+              <path d="M12 2a10 10 0 0 1 0 20" fill="currentColor" opacity="0.15"/>
+            </svg>
+          </span>
+          Colores del tema
+          <svg class="section-toggle__chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <div class="section-body" id="sec-colors">
+
+          <div class="color-presets">
+            <p class="field-label">Temas rapidos</p>
+            <div class="color-presets__grid" id="color-presets" role="group" aria-label="Paletas de color predefinidas"></div>
+          </div>
+
+          <div class="color-pickers">
+            <div class="color-row">
+              <label class="color-row__label" for="color-primary">Color principal</label>
+              <div class="color-row__swatch-wrap">
+                <input class="color-swatch" type="color" id="color-primary" name="primary" />
+                <input class="field-input field-input--hex" type="text" id="color-primary-hex" placeholder="ej. #075A58" maxlength="7" />
+              </div>
+            </div>
+            <div class="color-row">
+              <label class="color-row__label" for="color-accent">Color de acento</label>
+              <div class="color-row__swatch-wrap">
+                <input class="color-swatch" type="color" id="color-accent" name="accent" />
+                <input class="field-input field-input--hex" type="text" id="color-accent-hex" placeholder="ej. #C65B3D" maxlength="7" />
+              </div>
+            </div>
+            <div class="color-row">
+              <label class="color-row__label" for="color-bg">Fondo de pagina</label>
+              <div class="color-row__swatch-wrap">
+                <input class="color-swatch" type="color" id="color-bg" name="bg" />
+                <input class="field-input field-input--hex" type="text" id="color-bg-hex" placeholder="ej. #F7F3ED" maxlength="7" />
+              </div>
+            </div>
+            <div class="color-row">
+              <label class="color-row__label" for="color-surface">Fondo de botones</label>
+              <div class="color-row__swatch-wrap">
+                <input class="color-swatch" type="color" id="color-surface" name="surface" />
+                <input class="field-input field-input--hex" type="text" id="color-surface-hex" placeholder="ej. #FFFFFF" maxlength="7" />
+              </div>
+            </div>
+            <div class="color-row">
+              <label class="color-row__label" for="color-text">Color de texto</label>
+              <div class="color-row__swatch-wrap">
+                <input class="color-swatch" type="color" id="color-text" name="text" />
+                <input class="field-input field-input--hex" type="text" id="color-text-hex" placeholder="ej. #033130" maxlength="7" />
+              </div>
+            </div>
+            <button class="btn btn--ghost btn--sm" id="reset-colors">Restaurar colores originales</button>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- SECCION: Tipografia -->
+      <section class="panel-section">
+        <button class="section-toggle" aria-expanded="false" aria-controls="sec-typo">
+          <span class="section-toggle__icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <polyline points="4 7 4 4 20 4 20 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <line x1="9" y1="20" x2="15" y2="20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <line x1="12" y1="4" x2="12" y2="20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </span>
+          Fuente
+          <svg class="section-toggle__chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <div class="section-body section-body--collapsed" id="sec-typo">
+          <div class="field-group">
+            <label class="field-label" for="edit-font">Fuente de texto</label>
+            <select class="field-input field-input--select" id="edit-font">
+              <option value="'Plus Jakarta Sans', system-ui, sans-serif">Plus Jakarta Sans (predeterminada)</option>
+              <option value="'Inter', system-ui, sans-serif">Inter</option>
+              <option value="'DM Sans', system-ui, sans-serif">DM Sans</option>
+              <option value="'Poppins', system-ui, sans-serif">Poppins</option>
+              <option value="'Nunito', system-ui, sans-serif">Nunito</option>
+              <option value="'Montserrat', system-ui, sans-serif">Montserrat</option>
+              <option value="system-ui, sans-serif">Sistema (sin descarga)</option>
+            </select>
+            <p class="field-hint">La fuente se descarga de Google Fonts automaticamente.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECCION: Contrasena -->
+      <section class="panel-section">
+        <button class="section-toggle" aria-expanded="false" aria-controls="sec-security">
+          <span class="section-toggle__icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" stroke="currentColor" stroke-width="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </span>
+          Seguridad
+          <svg class="section-toggle__chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <div class="section-body section-body--collapsed" id="sec-security">
+          <div class="field-group">
+            <label class="field-label" for="new-password">Nueva contrasena</label>
+            <input class="field-input" type="password" id="new-password" autocomplete="new-password" placeholder="Min. 4 caracteres" minlength="4" />
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="confirm-password">Confirmar contrasena</label>
+            <input class="field-input" type="password" id="confirm-password" autocomplete="new-password" placeholder="Repite la contrasena" />
+            <p class="field-error" id="password-error" role="alert" aria-live="polite"></p>
+          </div>
+          <button class="btn btn--ghost btn--sm" id="save-password">Cambiar contrasena</button>
+          <p class="field-hint">La contrasena actual por defecto es <strong>crediphone</strong>. Cambiala antes de publicar.</p>
+        </div>
+      </section>
+
+    </div><!-- /panel__body -->
+
+    <!-- Pie del panel -->
+    <div class="panel__footer">
+      <button class="btn btn--ghost" id="panel-discard">Descartar cambios</button>
+      <button class="btn btn--primary" id="panel-save">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" stroke="currentColor" stroke-width="2"/>
+          <polyline points="17 21 17 13 7 13 7 21" stroke="currentColor" stroke-width="2"/>
+          <polyline points="7 3 7 8 15 8" stroke="currentColor" stroke-width="2"/>
+        </svg>
+        Guardar cambios
+      </button>
+    </div>
+
+  </aside>
+
+  <!-- Toast de confirmacion -->
+  <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="admin.js"></script>
+</body>
+</html>
